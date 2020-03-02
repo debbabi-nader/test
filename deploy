@@ -1,0 +1,21 @@
+#!/bin/sh
+
+BUILD_DIRECTORY_NAME=test
+DEPLOY_DIRECTORY_NAME=test
+
+if [ -z "$CATALINA_HOME" ]; then
+    echo 'ERROR: environment variable $CATALINA_HOME is not set!'
+    exit 1
+fi
+
+DEPLOY_DIRECTORY_PATH=$CATALINA_HOME/webapps/$DEPLOY_DIRECTORY_NAME
+
+mvn -Dmaven.test.skip=true clean package
+
+if [ $(find $CATALINA_HOME/webapps -type d -wholename $DEPLOY_DIRECTORY_PATH | wc -l) -eq 1 ]; then
+	find $DEPLOY_DIRECTORY_PATH -not \( -name "$DEPLOY_DIRECTORY_NAME" -o -name "WEB-INF" -o -name "classes" -o -wholename *WEB-INF/classes/static* \) -exec rm -rf {} +
+else
+	mkdir $DEPLOY_DIRECTORY_PATH
+fi
+
+cp -r ./target/$BUILD_DIRECTORY_NAME/. $DEPLOY_DIRECTORY_PATH
