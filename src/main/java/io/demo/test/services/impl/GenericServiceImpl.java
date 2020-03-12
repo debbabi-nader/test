@@ -12,7 +12,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
@@ -31,16 +30,18 @@ import io.demo.test.services.GenericService;
 import io.demo.test.utils.JsonPatchUtil;
 
 
-public class GenericServiceImpl<T extends GenericEntity> implements GenericService<T> {
+public abstract class GenericServiceImpl<T extends GenericEntity> implements GenericService<T> {
+	
+	protected final JpaRepository<T, String> repository;
+	protected final ObjectMapper objectMapper;
+	protected final Validator validator;
 
-	@Autowired
-	private JpaRepository<T, String> repository;
-	
-	@Autowired
-	private ObjectMapper objectMapper;
-	
-	@Autowired
-	private Validator validator;
+	public GenericServiceImpl(JpaRepository<T, String> repository, ObjectMapper objectMapper, Validator validator) {
+		super();
+		this.repository = repository;
+		this.objectMapper = objectMapper;
+		this.validator = validator;
+	}
 
 	@Override
 	public T findById(String id) {
@@ -63,7 +64,7 @@ public class GenericServiceImpl<T extends GenericEntity> implements GenericServi
 	
 	@Override
 	public Collection<T> findAll(Sort sort) {
-				
+		
 		return this.repository.findAll(sort);
 
 	}
@@ -73,7 +74,7 @@ public class GenericServiceImpl<T extends GenericEntity> implements GenericServi
 		try {
 			return this.repository.saveAndFlush(t);
 		} catch (DataIntegrityViolationException e) {
-			if (e.getMostSpecificCause().getClass().getName().equals("org.postgresql.util.PSQLException") && ((SQLException) e.getMostSpecificCause()).getSQLState().equals("23505"))
+			if (e.getMostSpecificCause() instanceof SQLException && ((SQLException) e.getMostSpecificCause()).getSQLState().equals("23505"))
 				throw new UniqueConstraintViolationException(e.getMostSpecificCause());
 			throw new BadRequestException(e);
 		}
@@ -118,7 +119,7 @@ public class GenericServiceImpl<T extends GenericEntity> implements GenericServi
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
 		} catch (DataIntegrityViolationException e) {
-			if (e.getMostSpecificCause().getClass().getName().equals("org.postgresql.util.PSQLException") && ((SQLException) e.getMostSpecificCause()).getSQLState().equals("23503"))
+			if (e.getMostSpecificCause() instanceof SQLException && ((SQLException) e.getMostSpecificCause()).getSQLState().equals("23503"))
 				throw new ForeignKeyIntegrityViolationException(e.getMostSpecificCause());
 			throw new BadRequestException(e);
 		}

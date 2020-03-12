@@ -1,5 +1,6 @@
 package io.demo.test.controllers;
 
+import java.security.Principal;
 import java.util.Collection;
 
 import javax.json.JsonPatch;
@@ -38,6 +39,11 @@ public class UserController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Collection<UserEntity> getUsers() {
 		return this.userService.findAll(Sort.by(Sort.Direction.ASC, "firstName"));
+	}
+	
+	@RequestMapping(value = "/current", method = RequestMethod.GET)
+	public Principal getCurrentUser(Principal user) {
+		return user;
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)

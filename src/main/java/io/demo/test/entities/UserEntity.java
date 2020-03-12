@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 
 @Entity
 @Table(name = "USERS")
@@ -25,24 +28,21 @@ public class UserEntity extends GenericEntity {
 	@NotBlank
 	@Column(nullable = false, unique = true)
 	private String email;
+	
+	@NotBlank
+	@Column(nullable = false)
+	private String password;
 
 	public UserEntity() {
 		super();
 	}
 
-	public UserEntity(String id, String firstName, String lastName, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+	public UserEntity(String id, String firstName, String lastName, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super(id, createdAt, updatedAt);
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
+		this.password = password;
 	}
 
 	public String getFirstName() {
@@ -59,6 +59,24 @@ public class UserEntity extends GenericEntity {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@JsonIgnore
+	public String getPassword() {
+		return password;
+	}
+
+	@JsonSetter
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override
