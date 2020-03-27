@@ -12,27 +12,27 @@ import io.demo.test.exceptions.AccountNotFoundException;
 import io.demo.test.services.CustomUserDetailsService;
 import io.demo.test.services.UserService;
 
-
 @Service
 public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
-	
 	@Autowired
 	private UserService userService;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-				
+
 		UserEntity userEntity;
-		
+
 		try {
 			userEntity = this.userService.getUserByEmail(username);
-		} catch (AccountNotFoundException ex) {
+		}
+		catch (AccountNotFoundException ex) {
 			throw new UsernameNotFoundException(username);
 		}
-		
-		return new User(userEntity.getEmail(), userEntity.getPassword(), true, true, true, true, AuthorityUtils.createAuthorityList("ROLE_USER"));
-	
+
+		return new User(userEntity.getEmail(), userEntity.getPassword(), true, true, true, true,
+				AuthorityUtils.createAuthorityList("ROLE_USER"));
+
 	}
 
 }

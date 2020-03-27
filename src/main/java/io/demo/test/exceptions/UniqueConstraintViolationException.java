@@ -1,6 +1,5 @@
 package io.demo.test.exceptions;
 
-
 public class UniqueConstraintViolationException extends BadRequestException {
 
 	private static final long serialVersionUID = 535080170580298920L;
@@ -12,5 +11,5 @@ public class UniqueConstraintViolationException extends BadRequestException {
 	public UniqueConstraintViolationException(Throwable cause) {
 		super(cause);
 	}
-		
+
 }

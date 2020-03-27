@@ -2,11 +2,10 @@ package io.demo.test.dtos;
 
 import java.io.Serializable;
 
-
 public class TokenDto implements Serializable {
 
 	private static final long serialVersionUID = -2986197958941299905L;
-	
+
 	private String accessToken;
 
 	public TokenDto() {
@@ -17,7 +16,7 @@ public class TokenDto implements Serializable {
 		super();
 		this.accessToken = accessToken;
 	}
-	
+
 	public String getAccessToken() {
 		return accessToken;
 	}

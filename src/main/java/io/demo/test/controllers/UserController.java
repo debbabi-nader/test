@@ -24,13 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 import io.demo.test.entities.UserEntity;
 import io.demo.test.services.UserService;
 
-
 @RestController
 @RequestMapping(value = "/api/v1/users")
 public class UserController {
 
 	private static final Log LOGGER = LogFactory.getLog(UserController.class);
-	
+
 	private final UserService userService;
 
 	@Autowired
@@ -43,13 +42,13 @@ public class UserController {
 	public UserEntity getUserByEmail(@RequestParam(value = "email", required = true) String email) {
 		return this.userService.getUserByEmail(email);
 	}
-	
+
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public Collection<UserEntity> getUsers() {
 		return this.userService.findAll(Sort.by(Sort.Direction.ASC, "firstName"));
 	}
-	
+
 	@RequestMapping(value = "/current", method = RequestMethod.GET)
 	public Principal getCurrentUser(Principal user) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -65,20 +64,21 @@ public class UserController {
 
 		return user;
 	}
-	
+
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public UserEntity createUser(@Valid @RequestBody UserEntity userEntity) {
 		return this.userService.create(userEntity);
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.PATCH, consumes = "application/json-patch+json")
-	public UserEntity partialUpdateUser(@RequestBody JsonPatch jsonPatch, @PathVariable(value = "id", required = true) String id) {
+	public UserEntity partialUpdateUser(@RequestBody JsonPatch jsonPatch,
+			@PathVariable(value = "id", required = true) String id) {
 		return this.userService.partialUpdate(jsonPatch, id);
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public void deleteUser(@PathVariable(value = "id", required = true) String id) {
 		this.userService.delete(id);
 	}
-	
+
 }

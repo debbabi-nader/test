@@ -29,11 +29,12 @@ import io.demo.test.exceptions.UniqueConstraintViolationException;
 import io.demo.test.services.GenericService;
 import io.demo.test.utils.JsonPatchUtil;
 
-
 public abstract class GenericServiceImpl<T extends GenericEntity> implements GenericService<T> {
-	
+
 	protected final JpaRepository<T, String> repository;
+
 	protected final ObjectMapper objectMapper;
+
 	protected final Validator validator;
 
 	public GenericServiceImpl(JpaRepository<T, String> repository, ObjectMapper objectMapper, Validator validator) {
@@ -45,7 +46,7 @@ public abstract class GenericServiceImpl<T extends GenericEntity> implements Gen
 
 	@Override
 	public T findById(String id) {
-		
+
 		if (id == null || id.trim().equals(""))
 			throw new MissingRequiredArgumentException();
 		Optional<T> entity = this.repository.findById(id);
@@ -59,50 +60,54 @@ public abstract class GenericServiceImpl<T extends GenericEntity> implements Gen
 	public Collection<T> findAll() {
 
 		return this.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
-	
+
 	}
-	
+
 	@Override
 	public Collection<T> findAll(Sort sort) {
-		
+
 		return this.repository.findAll(sort);
 
 	}
-	
+
 	private T persist(T t) {
-		
+
 		try {
 			return this.repository.saveAndFlush(t);
-		} catch (DataIntegrityViolationException e) {
-			if (e.getMostSpecificCause() instanceof SQLException && ((SQLException) e.getMostSpecificCause()).getSQLState().equals("23505"))
+		}
+		catch (DataIntegrityViolationException e) {
+			if (e.getMostSpecificCause() instanceof SQLException
+					&& ((SQLException) e.getMostSpecificCause()).getSQLState().equals("23505"))
 				throw new UniqueConstraintViolationException(e.getMostSpecificCause());
 			throw new BadRequestException(e);
 		}
-		
+
 	}
 
 	@Transactional
 	@Override
 	public T create(T t) {
-		
+
 		t.setId(UUID.randomUUID().toString());
 		return this.persist(t);
-		
+
 	}
 
 	@Transactional
 	@Override
 	public T partialUpdate(JsonPatch jsonPatch, String id) {
-		
+
 		T existingEntity = this.findById(id);
 		@SuppressWarnings("unchecked")
-		T patchedEntity = JsonPatchUtil.patch(jsonPatch, existingEntity, (Class<T>)((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[0], this.objectMapper);
+		T patchedEntity = JsonPatchUtil.patch(jsonPatch, existingEntity,
+				(Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0],
+				this.objectMapper);
 		patchedEntity.setId(existingEntity.getId());
 		patchedEntity.setCreatedAt(existingEntity.getCreatedAt());
 		patchedEntity.setUpdatedAt(existingEntity.getUpdatedAt());
 		Set<ConstraintViolation<T>> violations = this.validator.validate(patchedEntity);
-        if (!violations.isEmpty())
-        	throw new ConstraintViolationException(violations);
+		if (!violations.isEmpty())
+			throw new ConstraintViolationException(violations);
 		return this.persist(patchedEntity);
 
 	}
@@ -110,16 +115,19 @@ public abstract class GenericServiceImpl<T extends GenericEntity> implements Gen
 	@Transactional
 	@Override
 	public void delete(String id) {
-		
+
 		if (id == null || id.trim().equals(""))
 			throw new MissingRequiredArgumentException();
 		try {
 			this.repository.deleteById(id);
 			this.repository.flush();
-		} catch (EmptyResultDataAccessException e) {
+		}
+		catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
-		} catch (DataIntegrityViolationException e) {
-			if (e.getMostSpecificCause() instanceof SQLException && ((SQLException) e.getMostSpecificCause()).getSQLState().equals("23503"))
+		}
+		catch (DataIntegrityViolationException e) {
+			if (e.getMostSpecificCause() instanceof SQLException
+					&& ((SQLException) e.getMostSpecificCause()).getSQLState().equals("23503"))
 				throw new ForeignKeyIntegrityViolationException(e.getMostSpecificCause());
 			throw new BadRequestException(e);
 		}

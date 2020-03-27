@@ -4,17 +4,16 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotBlank;
 
-
 public class SignInCredentialsDto implements Serializable {
 
 	private static final long serialVersionUID = 5345872347858453861L;
 
 	@NotBlank
 	private String email;
-	
+
 	@NotBlank
 	private String password;
-	
+
 	public SignInCredentialsDto() {
 		super();
 	}

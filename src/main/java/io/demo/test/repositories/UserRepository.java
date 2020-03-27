@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import io.demo.test.entities.UserEntity;
 
-
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, String> {
 

@@ -17,14 +17,14 @@ import io.demo.test.exceptions.InvalidEmailAddressException;
 import io.demo.test.repositories.UserRepository;
 import io.demo.test.services.UserService;
 
-
 @Service
 public class UserServiceImpl extends GenericServiceImpl<UserEntity> implements UserService {
-	
+
 	private final PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
-	public UserServiceImpl(UserRepository repository, ObjectMapper objectMapper, Validator validator, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(UserRepository repository, ObjectMapper objectMapper, Validator validator,
+			PasswordEncoder passwordEncoder) {
 		super(repository, objectMapper, validator);
 		this.passwordEncoder = passwordEncoder;
 	}
@@ -42,14 +42,15 @@ public class UserServiceImpl extends GenericServiceImpl<UserEntity> implements U
 	@Transactional
 	@Override
 	public UserEntity create(UserEntity userEntity) {
-		
-		if (!Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$").matcher(userEntity.getEmail()).matches())
+
+		if (!Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+				.matcher(userEntity.getEmail()).matches())
 			throw new InvalidEmailAddressException();
-		
+
 		userEntity.setPassword(this.passwordEncoder.encode(userEntity.getPassword()));
-		
+
 		return super.create(userEntity);
 
 	}
-	
+
 }

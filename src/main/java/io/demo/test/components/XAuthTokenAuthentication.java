@@ -5,13 +5,12 @@ import java.util.Collection;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-
 public class XAuthTokenAuthentication implements Authentication {
 
 	private static final long serialVersionUID = 348535158555772773L;
-	
+
 	private final String xAuthToken;
-	
+
 	public XAuthTokenAuthentication(String xAuthToken) {
 		super();
 		this.xAuthToken = xAuthToken;
@@ -49,7 +48,7 @@ public class XAuthTokenAuthentication implements Authentication {
 
 	@Override
 	public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-		
+
 	}
 
 }

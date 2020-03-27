@@ -9,11 +9,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import io.demo.test.entities.UserEntity;
 
-
 public class UserAuthentication implements Authentication {
 
 	private static final long serialVersionUID = -7657268603858246005L;
-	
+
 	private final UserEntity userEntity;
 
 	public UserAuthentication(UserEntity userEntity) {
@@ -53,7 +52,7 @@ public class UserAuthentication implements Authentication {
 
 	@Override
 	public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-		
+
 	}
 
 }

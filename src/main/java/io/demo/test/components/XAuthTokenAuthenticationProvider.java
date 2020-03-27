@@ -16,15 +16,15 @@ import io.demo.test.entities.UserEntity;
 import io.demo.test.exceptions.AccountNotFoundException;
 import io.demo.test.services.UserService;
 
-
 @Component
 public class XAuthTokenAuthenticationProvider<S extends Session> implements AuthenticationProvider {
-	
+
 	private static final Log LOGGER = LogFactory.getLog(XAuthTokenAuthenticationProvider.class);
 
 	private final SessionRepository<S> sessionRepository;
+
 	private final UserService userService;
-	
+
 	@Autowired
 	public XAuthTokenAuthenticationProvider(SessionRepository<S> sessionRepository, UserService userService) {
 		super();
@@ -34,34 +34,35 @@ public class XAuthTokenAuthenticationProvider<S extends Session> implements Auth
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		
+
 		LOGGER.info("XAuthTokenAuthenticationProvider authenticate method is invoked...");
-		
+
 		if (!this.supports(authentication.getClass()))
 			return null;
-		
+
 		String xAuthToken = (String) authentication.getCredentials();
-		
+
 		LOGGER.info("XAuthToken: " + xAuthToken);
-		
+
 		Session session = this.sessionRepository.findById(xAuthToken);
-		
+
 		if (session == null)
 			throw new BadCredentialsException("No session was found for the provided session id");
-		
+
 		if (session.isExpired())
 			throw new BadCredentialsException("Session expired");
-		
+
 		UserEntity user;
-		
+
 		try {
 			String email = session.getAttribute(FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME);
 			LOGGER.info("Email: " + email);
 			user = this.userService.getUserByEmail(email);
-		} catch (AccountNotFoundException e) {
+		}
+		catch (AccountNotFoundException e) {
 			throw new BadCredentialsException("Invalid session");
 		}
-		
+
 		return new UserAuthentication(user);
 
 	}

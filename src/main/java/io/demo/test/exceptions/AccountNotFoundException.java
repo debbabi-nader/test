@@ -1,10 +1,9 @@
 package io.demo.test.exceptions;
 
-
 public class AccountNotFoundException extends NotFoundException {
 
 	private static final long serialVersionUID = -25539262776109991L;
-	
+
 	private String email;
 
 	public AccountNotFoundException(String email) {

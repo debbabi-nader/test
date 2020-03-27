@@ -12,7 +12,6 @@ import io.demo.test.dtos.SignInCredentialsDto;
 import io.demo.test.dtos.TokenDto;
 import io.demo.test.services.AuthenticationService;
 
-
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthenticationController {
@@ -29,5 +28,5 @@ public class AuthenticationController {
 	public TokenDto signIn(@Valid @RequestBody SignInCredentialsDto signInCredentialsDto) {
 		return this.authenticationService.signIn(signInCredentialsDto);
 	}
-	
+
 }

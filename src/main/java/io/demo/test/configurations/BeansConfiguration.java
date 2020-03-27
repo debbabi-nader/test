@@ -16,55 +16,50 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 // import io.demo.test.services.CustomUserDetailsService;
 
-
 @Configuration
 public class BeansConfiguration {
-	
+
 	/*
-	@Autowired
-	private CustomUserDetailsService customUserDetailsService;
+	 * @Autowired private CustomUserDetailsService customUserDetailsService;
 	 */
-	
+
 	@Bean
-    public ObjectMapper objectMapper() {
-		
-		return new ObjectMapper()
-				.setDefaultPropertyInclusion(Include.NON_NULL)
+	public ObjectMapper objectMapper() {
+
+		return new ObjectMapper().setDefaultPropertyInclusion(Include.NON_NULL)
 				.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-				.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-				.findAndRegisterModules();
-		
+				.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS).findAndRegisterModules();
+
 	}
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		
+
 		return new BCryptPasswordEncoder();
-	
+
 	}
-	
+
 	/*
-	@Bean
-	public DaoAuthenticationProvider daoAuthenticationProvider() {
-	
-		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-		
-		daoAuthenticationProvider.setPasswordEncoder(this.passwordEncoder());
-		daoAuthenticationProvider.setUserDetailsService(this.customUserDetailsService);
-		
-		return daoAuthenticationProvider;
-	
-	}
-	*/
-	
+	 * @Bean public DaoAuthenticationProvider daoAuthenticationProvider() {
+	 *
+	 * DaoAuthenticationProvider daoAuthenticationProvider = new
+	 * DaoAuthenticationProvider();
+	 *
+	 * daoAuthenticationProvider.setPasswordEncoder(this.passwordEncoder());
+	 * daoAuthenticationProvider.setUserDetailsService(this.customUserDetailsService);
+	 *
+	 * return daoAuthenticationProvider;
+	 *
+	 * }
+	 */
+
 	/*
-	@Bean
-	public HttpSessionIdResolver httpSessionIdResolver() {
-	
-		return HeaderHttpSessionIdResolver.xAuthToken(); 
-	
-	}
-	*/
-	
+	 * @Bean public HttpSessionIdResolver httpSessionIdResolver() {
+	 *
+	 * return HeaderHttpSessionIdResolver.xAuthToken();
+	 *
+	 * }
+	 */
+
 }

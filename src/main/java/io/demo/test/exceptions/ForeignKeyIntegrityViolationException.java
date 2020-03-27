@@ -1,6 +1,5 @@
 package io.demo.test.exceptions;
 
-
 public class ForeignKeyIntegrityViolationException extends BadRequestException {
 
 	private static final long serialVersionUID = -3292893973530211675L;
@@ -12,5 +11,5 @@ public class ForeignKeyIntegrityViolationException extends BadRequestException {
 	public ForeignKeyIntegrityViolationException(Throwable cause) {
 		super(cause);
 	}
-		
+
 }

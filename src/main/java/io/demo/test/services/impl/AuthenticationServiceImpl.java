@@ -14,16 +14,18 @@ import io.demo.test.exceptions.WrongPasswordException;
 import io.demo.test.services.AuthenticationService;
 import io.demo.test.services.UserService;
 
-
 @Service
 public class AuthenticationServiceImpl<S extends Session> implements AuthenticationService {
-	
+
 	private final UserService userService;
+
 	private final PasswordEncoder passwordEncoder;
+
 	private final SessionRepository<S> sessionRepository;
-	
+
 	@Autowired
-	public AuthenticationServiceImpl(UserService userService, PasswordEncoder passwordEncoder, SessionRepository<S> sessionRepository) {
+	public AuthenticationServiceImpl(UserService userService, PasswordEncoder passwordEncoder,
+			SessionRepository<S> sessionRepository) {
 		super();
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
@@ -33,9 +35,9 @@ public class AuthenticationServiceImpl<S extends Session> implements Authenticat
 	@SuppressWarnings("unchecked")
 	@Override
 	public TokenDto signIn(SignInCredentialsDto signInCredentialsDto) {
-		
+
 		UserEntity user = this.userService.getUserByEmail(signInCredentialsDto.getEmail());
-		
+
 		if (!passwordEncoder.matches(signInCredentialsDto.getPassword(), user.getPassword()))
 			throw new WrongPasswordException();
 
@@ -44,7 +46,7 @@ public class AuthenticationServiceImpl<S extends Session> implements Authenticat
 		this.sessionRepository.save((S) session);
 
 		return new TokenDto(session.getId());
-	
+
 	}
 
 }

@@ -1,10 +1,9 @@
 package io.demo.test.exceptions;
 
-
 public class ResourceNotFoundException extends NotFoundException {
 
 	private static final long serialVersionUID = -6707290497344410484L;
-	
+
 	private String id;
 
 	public ResourceNotFoundException(String id) {

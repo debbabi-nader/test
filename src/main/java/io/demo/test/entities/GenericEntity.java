@@ -15,7 +15,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class GenericEntity implements Serializable {
@@ -24,11 +23,11 @@ public abstract class GenericEntity implements Serializable {
 
 	@Id
 	protected String id;
-	
+
 	@CreatedDate
 	@Column(nullable = false)
 	protected LocalDateTime createdAt;
-	
+
 	@LastModifiedDate
 	@Column(nullable = false)
 	protected LocalDateTime updatedAt;

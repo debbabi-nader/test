@@ -17,16 +17,15 @@ import org.springframework.security.web.authentication.ForwardAuthenticationSucc
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class XAuthTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-	
+
 	private static final Log LOGGER = LogFactory.getLog(XAuthTokenAuthenticationFilter.class);
 
 	public XAuthTokenAuthenticationFilter() {
 		super(new AntPathRequestMatcher("/api/v1/**"));
 	}
-	
+
 	@Autowired
 	@Override
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
@@ -36,21 +35,21 @@ public class XAuthTokenAuthenticationFilter extends AbstractAuthenticationProces
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException, IOException, ServletException {
-		
+
 		String requestURL = request.getRequestURI().substring(request.getContextPath().length());
 
 		LOGGER.info("XAuthTokenAuthenticationFilter attempting to authenticate request: " + requestURL);
-		
+
 		super.setAuthenticationSuccessHandler(new ForwardAuthenticationSuccessHandler(requestURL));
-		
+
 		String xAuthToken = request.getHeader("X-Auth-Token");
 		if (xAuthToken == null)
 			xAuthToken = "";
-		
+
 		XAuthTokenAuthentication xAuthTokenAuthentication = new XAuthTokenAuthentication(xAuthToken);
-		
+
 		return this.getAuthenticationManager().authenticate(xAuthTokenAuthentication);
-	
+
 	}
 
 }
