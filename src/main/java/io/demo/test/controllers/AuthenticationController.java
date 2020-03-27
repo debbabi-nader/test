@@ -25,7 +25,7 @@ public class AuthenticationController {
 		this.authenticationService = authenticationService;
 	}
 
-	@RequestMapping(value = "/manual-sign-in", method = RequestMethod.POST)
+	@RequestMapping(value = "/sign-in", method = RequestMethod.POST)
 	public TokenDto signIn(@Valid @RequestBody SignInCredentialsDto signInCredentialsDto) {
 		return this.authenticationService.signIn(signInCredentialsDto);
 	}
